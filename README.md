@@ -1,7 +1,7 @@
-#Assignment 1 Faculty Gradebook
+#Assignment Quiz 4 F
 
 #Purpose of the app
-A faculty gradebook created by using arrays and struct.
+Acts a an online Clinical Appointment Mangager system
 
 #Execution
 Can run on Visual Studio.
