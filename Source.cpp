@@ -1,137 +1,102 @@
 ﻿#include <iostream>
-#include <fstream>
-#include <list>
+#include <vector>
 #include <iomanip>
-#include <sstream>
+#include <fstream>
 using namespace std;
 
-struct Patient {
-    string id;
+struct MenuItem {
+    int id;
     string name;
-    string severity;
-    int waitTime;
-    string status; // "Waiting" or "Admitted"
+    float price;
 };
 
-// Function declarations
-void loadPatients(list<Patient>& patients);
-void savePatients(const list<Patient>& patients);
-void registerPatient(list<Patient>& patients);
-void displayQueue(const list<Patient>& patients);
-void admitPatient(list<Patient>& patients);
-void viewSummary(const list<Patient>& patients);
+struct CartItem {
+    MenuItem item;
+    int quantity;
+};
 
-int main() {
-    list<Patient> patients;
-    loadPatients(patients);
-    int choice;
-    do {
-        cout << "\n****** Welcome to Emergency Room Queue Manager ******\n";
-        cout << "1. Register New Patient\n2. Display Patient Queue\n3. Admit Patient\n4. View ER Summary\n5. Exit\n→ ";
-        cin >> choice;
-        switch (choice) {
-        case 1: registerPatient(patients); break;
-        case 2: displayQueue(patients); break;
-        case 3: admitPatient(patients); break;
-        case 4: viewSummary(patients); break;
-        case 5:
-            savePatients(patients);
-            cout << "Patient queue saved to patients.txt. Have a safe shift!" << endl;
-            break;
-        default: cout << "Invalid option. Try again.\n";
-        }
-    } while (choice != 5);
-    return 0;
-}
-
-// Load patients from file
-void loadPatients(list<Patient>& patients) {
-    ifstream infile("patients.txt");
-    if (!infile) return;
-
-    string line;
-    while (getline(infile, line)) {
-        stringstream ss(line);
-        Patient p;
-        string waitStr;
-        getline(ss, p.id, ',');
-        getline(ss, p.name, ',');
-        getline(ss, p.severity, ',');
-        getline(ss, waitStr, ',');
-        getline(ss, p.status);
-        p.waitTime = stoi(waitStr);
-        patients.push_back(p);
-    }
-    infile.close();
-}
-
-// Save patients to file
-void savePatients(const list<Patient>& patients) {
-    ofstream outfile("patients.txt");
-    for (const auto& p : patients) {
-        outfile << p.id << "," << p.name << "," << p.severity << ","
-            << p.waitTime << "," << p.status << endl;
-    }
-    outfile.close();
-}
-
-// Register new patient
-void registerPatient(list<Patient>& patients) {
-    Patient p;
-    cout << "Enter patient ID: ";
-    cin >> p.id;
-    cin.ignore();
-    cout << "Enter name: ";
-    getline(cin, p.name);
-    cout << "Enter condition severity: ";
-    getline(cin, p.severity);
-    cout << "Enter estimated wait time: ";
-    cin >> p.waitTime;
-    p.status = "Waiting";
-    patients.push_back(p);
-    cout << "Patient registered successfully!" << endl;
-}
-
-// Display patient queue
-void displayQueue(const list<Patient>& patients) {
-    cout << "\n=========== ER WAITING LIST ===========" << endl;
-    cout << left << setw(6) << "ID" << setw(20) << "Name" << setw(10)
-        << "Severity" << setw(10) << "Wait(min)" << "Status" << endl;
-    cout << "------------------------------------------------------" << endl;
-    for (const auto& p : patients) {
-        cout << left << setw(6) << p.id << setw(20) << p.name << setw(10)
-            << p.severity << setw(10) << p.waitTime << p.status << endl;
+void displayMenu(const vector<MenuItem>& menu) {
+    cout << "\n=========== PIZZA MENU ===========" << endl;
+    cout << left << setw(5) << "ID" << setw(20) << "Item" << "Price" << endl;
+    cout << "----------------------------------" << endl;
+    for (const auto& m : menu) {
+        cout << left << setw(5) << m.id << setw(20) << m.name << "$" << fixed << setprecision(2) << m.price << endl;
     }
 }
 
-// Admit first patient
-void admitPatient(list<Patient>& patients) {
-    for (auto& p : patients) {
-        if (p.status == "Waiting") {
-            p.status = "Admitted";
-            cout << "Patient " << p.id << " has been admitted to the ER." << endl;
+void addToCart(vector<CartItem>& cart, const vector<MenuItem>& menu) {
+    int id, qty;
+    cout << "Enter item ID to add: ";
+    cin >> id;
+    cout << "Enter quantity: ";
+    cin >> qty;
+
+    for (const auto& m : menu) {
+        if (m.id == id) {
+            cart.push_back({ m, qty });
+            cout << qty << " x " << m.name << " added to cart.\n";
             return;
         }
     }
-    cout << "No waiting patients to admit." << endl;
+    cout << "Invalid item ID.\n";
 }
 
-// View ER summary
-void viewSummary(const list<Patient>& patients) {
-    int total = 0, admitted = 0, waiting = 0, waitSum = 0;
-    for (const auto& p : patients) {
-        total++;
-        if (p.status == "Admitted") admitted++;
-        else if (p.status == "Waiting") {
-            waiting++;
-            waitSum += p.waitTime;
-        }
+void viewCart(const vector<CartItem>& cart) {
+    cout << "\n=========== YOUR CART ===========" << endl;
+    float total = 0;
+    for (const auto& c : cart) {
+        float itemTotal = c.item.price * c.quantity;
+        cout << c.quantity << " x " << c.item.name << " @ $" << fixed << setprecision(2)
+            << c.item.price << " = $" << itemTotal << endl;
+        total += itemTotal;
     }
-    float avgWait = (waiting > 0) ? static_cast<float>(waitSum) / waiting : 0.0;
-    cout << "\n========== ER SUMMARY ==========" << endl;
-    cout << "Total Patients: " << total << endl;
-    cout << "Admitted: " << admitted << endl;
-    cout << "Waiting: " << waiting << endl;
-    cout << "Avg Wait Time (Waiting): " << fixed << setprecision(2) << avgWait << " minutes" << endl;
-    cout << "================================" << endl;
+    cout << "----------------------------------" << endl;
+    cout << "Total: $" << fixed << setprecision(2) << total << endl;
+}
+
+void checkout(const vector<CartItem>& cart) {
+    ofstream receipt("receipt.txt");
+    float total = 0;
+    receipt << "=========== RECEIPT ===========" << endl;
+    for (const auto& c : cart) {
+        float itemTotal = c.item.price * c.quantity;
+        receipt << c.quantity << " x " << c.item.name << " @ $" << fixed << setprecision(2)
+            << c.item.price << " = $" << itemTotal << endl;
+        total += itemTotal;
+    }
+    receipt << "----------------------------------" << endl;
+    receipt << "Total: $" << fixed << setprecision(2) << total << endl;
+    receipt.close();
+    cout << "Order placed! Receipt saved to receipt.txt\n";
+}
+
+int main() {
+    vector<MenuItem> menu = {
+        {1, "Pepperoni Pizza", 12.99},
+        {2, "Cheese Pizza", 10.99},
+        {3, "Veggie Pizza", 11.49},
+        {4, "Wings (6 pcs)", 6.99},
+        {5, "Garlic Bread", 4.99},
+        {6, "Soda", 1.99}
+    };
+
+    vector<CartItem> cart;
+    int choice;
+
+    do {
+        cout << "\n****** Welcome to Pizza Order System ******\n";
+        cout << "1. Browse Menu\n2. Add to Cart\n3. View Cart\n4. Checkout\n5. Exit\n→ ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: displayMenu(menu); break;
+        case 2: addToCart(cart, menu); break;
+        case 3: viewCart(cart); break;
+        case 4: checkout(cart); break;
+        case 5: cout << "Thanks for using the Pizza Order System!\n"; break;
+        default: cout << "Invalid option. Try again.\n";
+        }
+    } while (choice != 5);
+
+    return 0;
 }
