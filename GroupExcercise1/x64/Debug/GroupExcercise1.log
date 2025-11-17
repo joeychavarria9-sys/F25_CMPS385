@@ -1,0 +1,7 @@
+﻿  Source.cpp
+C:\Users\joeyc\source\repos\GroupExcercise1\GroupExcercise1\Source.cpp(18,47): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\joeyc\source\repos\GroupExcercise1\GroupExcercise1\Source.cpp(19,44): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\joeyc\source\repos\GroupExcercise1\GroupExcercise1\Source.cpp(27,44): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\joeyc\source\repos\GroupExcercise1\GroupExcercise1\Source.cpp(28,44): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\joeyc\source\repos\GroupExcercise1\GroupExcercise1\Source.cpp(30,21): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  GroupExcercise1.vcxproj -> C:\Users\joeyc\source\repos\GroupExcercise1\x64\Debug\GroupExcercise1.exe
