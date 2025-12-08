@@ -1,0 +1,29 @@
+OrderID,1003
+PlacedAt,2025-12-07 23:11:29
+ServiceMethod,Carryout
+Day,ASAP
+Time,
+Total,35.98
+Items:
+Medium Pizza,Chicken and Bacon,28.99,1
+Bread Bites (16-piece),,6.99,1
+----------------------
+OrderID,1004
+PlacedAt,2025-12-07 23:14:53
+ServiceMethod,Delivery
+Day,12/10/2025
+Time,4:00 PM
+Total,37.97
+Items:
+Medium Pizza,No pizza sauce, alfredo sauce, chicken, and bacon,28.99,1
+Drink,Sprite 20oz,2.99,1
+----------------------
+OrderID,24853
+PlacedAt,2025-12-08 05:56:48
+ServiceMethod,Carryout
+Day,ASAP
+Time,
+Total,22.99
+Items:
+1 Pizza,Cheese | No special instructions,22.99,1
+----------------------

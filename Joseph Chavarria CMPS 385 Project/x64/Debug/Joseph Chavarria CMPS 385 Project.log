@@ -1,0 +1,3 @@
+﻿  Final Project.cpp
+C:\Users\joeyc\source\repos\Joseph Chavarria CMPS 385 Project\Joseph Chavarria CMPS 385 Project\Final Project.cpp(345,40): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Joseph Chavarria CMPS 385 Project.vcxproj -> C:\Users\joeyc\source\repos\Joseph Chavarria CMPS 385 Project\x64\Debug\Joseph Chavarria CMPS 385 Project.exe
